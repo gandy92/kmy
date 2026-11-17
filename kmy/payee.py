@@ -26,14 +26,20 @@ class Payee:
         return payee
 
     def init_from_xml(self, node):
-        self.reference = node.attrib['reference']
-        self.name = node.attrib['name']
-        self.email = node.attrib['email']
-        self.id = node.attrib['id']
-        self.matchingEnabled = (node.attrib['matchingenabled'] != '0')
-        self.usingMatchkey = (node.attrib["usingmatchkey"] != "0") if "usingmatchkey" in node.attrib else False
-        self.matchkeys = node.attrib["matchkey"].split("&#xa;") if "matchkeys" in node.attrib else []
-        address_node = node.find('ADDRESS')
+        self.reference = node.attrib["reference"]
+        self.name = node.attrib["name"]
+        self.email = node.attrib["email"]
+        self.id = node.attrib["id"]
+        self.matchingEnabled = node.attrib["matchingenabled"] != "0"
+        self.usingMatchkey = (
+            (node.attrib["usingmatchkey"] != "0")
+            if "usingmatchkey" in node.attrib
+            else False
+        )
+        self.matchkeys = (
+            node.attrib["matchkey"].split("&#xa;") if "matchkeys" in node.attrib else []
+        )
+        address_node = node.find("ADDRESS")
         if address_node is not None:
             self.address = PayeeAddress.from_xml(address_node)
         payee_identifier_nodes = node.findall("payeeIdentifier")
